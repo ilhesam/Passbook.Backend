@@ -13,7 +13,9 @@ namespace Infrastructure.Persistence
     public class PassbookDbContext : IdentityDbContext
         <AppUser, AppRole, string, AppUserClaim, AppUserRole, AppUserLogin, AppRoleClaim, AppUserToken>
     {
-        public DbSet<UserJwtToken> UserJwtTokens { get; set; }
+        public virtual DbSet<UserJwtToken> UserJwtTokens { get; set; }
+
+        public virtual DbSet<Password> Passwords { get; set; }
 
         public PassbookDbContext(DbContextOptions<PassbookDbContext> options)
             : base(options)
@@ -26,6 +28,8 @@ namespace Infrastructure.Persistence
             modelBuilder?.ApplyConfiguration<UserJwtToken>(new UserJwtTokenConfiguration());
 
             modelBuilder?.ApplyConfiguration<AppUser>(new AppUserConfiguration());
+
+            modelBuilder?.ApplyConfiguration<Password>(new PasswordConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

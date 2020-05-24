@@ -8,6 +8,8 @@ namespace Domain.Common
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        public DateTime CreateDateTime { get; set; } = DateTime.Now;
+        public DateTime CreatedDateTime { get; set; } = DateTime.Now;
+
+        public DateTime UpdatedDateTime { get; set; } = DateTime.Now;
     }
 }

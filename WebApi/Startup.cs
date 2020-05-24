@@ -38,7 +38,6 @@ namespace WebApi
                 config.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowCredentials()
                     .Build();
             }));
 
@@ -61,7 +60,7 @@ namespace WebApi
 
             app.UseRouting();
 
-            // app.UseCors("CorsPolicy");
+            app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();

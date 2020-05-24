@@ -14,6 +14,10 @@ namespace Infrastructure.Persistence.Configurations.Identity
             builder?.HasMany(u => u.JwtTokens)
                 .WithOne(u => u.User)
                 .HasForeignKey(u => u.UserId);
+
+            builder?.HasMany(u => u.Passwords)
+                .WithOne(u => u.User)
+                .HasForeignKey(u => u.UserId);
         }
     }
 }

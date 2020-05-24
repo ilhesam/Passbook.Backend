@@ -13,7 +13,10 @@ namespace Infrastructure.Persistence.Configurations.Common
         {
             builder?.HasKey(e => e.Id);
 
-            builder?.Property(e => e.CreateDateTime)
+            builder?.Property(e => e.CreatedDateTime)
+                .IsRequired();
+
+            builder?.Property(e => e.UpdatedDateTime)
                 .IsRequired();
         }
     }

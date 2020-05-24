@@ -4,17 +4,19 @@ using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces;
 using ApplicationCore.ViewModels;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
     [Route("Api/[controller]")]
     [ApiController]
-    // [EnableCors("CorsPolicy")]
+    [EnableCors("CorsPolicy")]
     public class AccountController : ControllerBase
     {
         private readonly IJwtService _jwtService;
@@ -34,9 +36,9 @@ namespace WebApi.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Register(RegisterDto model)
         {
-            var validate = await _registerValidator.ValidateAsync(model);
+            var validationResult = await _registerValidator.ValidateAsync(model);
 
-            if (!validate.IsValid)
+            if (!validationResult.IsValid)
             {
                 return BadRequest();
             }
@@ -56,31 +58,34 @@ namespace WebApi.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Login(LoginDto userDto)
         {
-            var validate = await _loginValidator.ValidateAsync(userDto);
+            var validationResult = await _loginValidator.ValidateAsync(userDto);
 
-            if (!validate.IsValid)
+            if (!validationResult.IsValid)
             {
                 return BadRequest();
             }
 
             var signInResult = await _userService.SignInAsync(userDto.UserName, userDto.Password);
 
-            if (signInResult.Succeeded)
-            {
-                var userJwtToken = await _jwtService.GenerateAndSaveUserJwtTokenAsync(userDto);
-
-                return Ok(new
-                {
-                    message = "ورود به حساب کاربری با موفقیت انجام شد!",
-                    token = userJwtToken.AccessToken
-                });
-            }
-
             var error = new { errorMessage = "نام کاربری یا رمز عبور وارد شده اشتباه می باشد" };
 
-            if (signInResult.IsLockedOut)
+            if (signInResult != null)
             {
-                error = new { errorMessage = "حساب کاربری شما به دلیل 5 بار ورود ناموفق به مدت 5 دقیقه قفل شده است" };
+                if (signInResult.Succeeded)
+                {
+                    var userJwtToken = await _jwtService.GenerateAndSaveUserJwtTokenAsync(userDto);
+
+                    return Ok(new
+                    {
+                        message = "ورود به حساب کاربری با موفقیت انجام شد!",
+                        token = userJwtToken.AccessToken
+                    });
+                }
+
+                if (signInResult.IsLockedOut)
+                {
+                    error = new { errorMessage = "حساب کاربری شما به دلیل 5 بار ورود ناموفق به مدت 5 دقیقه قفل شده است" };
+                }
             }
 
             return BadRequest(error);
@@ -90,8 +95,7 @@ namespace WebApi.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Logout()
         {
-            string authHeader = HttpContext.Request.Headers["Authorization"];
-            var token = authHeader.Substring("Bearer ".Length);
+            var token = HttpContext.GetAuthToken();
 
             await _jwtService.DeleteUserJwtTokenAsync(token);
             return Ok(new { message = "با موفقیت از حساب کاربری خود خارج شدید" });

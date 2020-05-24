@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Persistence.Migrations
 {
-    public partial class AuthenticationMigration : Migration
+    public partial class FirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -153,11 +153,36 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Passwords",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
+                    UpdatedDateTime = table.Column<DateTime>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailAddress = table.Column<string>(maxLength: 256, nullable: true),
+                    PasswordHash = table.Column<string>(nullable: false),
+                    UsedIn = table.Column<string>(maxLength: 1000, nullable: false),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Passwords", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Passwords_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserJwtTokens",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    CreateDateTime = table.Column<DateTime>(nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
+                    UpdatedDateTime = table.Column<DateTime>(nullable: false),
                     AccessTokenHash = table.Column<string>(maxLength: 256, nullable: false),
                     AccessTokenExpiresDateTime = table.Column<DateTime>(nullable: false),
                     TokenPlatform = table.Column<int>(nullable: false),
@@ -214,6 +239,11 @@ namespace Infrastructure.Persistence.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Passwords_UserId",
+                table: "Passwords",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserJwtTokens_UserId",
                 table: "UserJwtTokens",
                 column: "UserId");
@@ -235,6 +265,9 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Passwords");
 
             migrationBuilder.DropTable(
                 name: "UserJwtTokens");

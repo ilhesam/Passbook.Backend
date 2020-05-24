@@ -90,7 +90,7 @@ namespace ApplicationCore.Services
             return userJwtTokenDto;
         }
 
-        public virtual string HashToken(string token) => token.EncodeTextMd5();
+        public virtual string HashToken(string token) => token.EncryptMd5();
 
         public virtual async Task<bool> IsExistTokenAsync(string token)
         {
@@ -99,7 +99,7 @@ namespace ApplicationCore.Services
             return await UserJwtTokenRepository.ExistsAsync(u => u.AccessTokenHash == tokenHash);
         }
 
-        public virtual async Task<UserJwtToken> GetUserJwtToken(string token)
+        public virtual async Task<UserJwtToken> GetUserJwtTokenAsync(string token)
         {
             var tokenHash = HashToken(token);
 
@@ -115,7 +115,7 @@ namespace ApplicationCore.Services
 
         public virtual async Task DeleteUserJwtTokenAsync(string token)
         {
-            var userJwtToken = await GetUserJwtToken(token);
+            var userJwtToken = await GetUserJwtTokenAsync(token);
             await DeleteUserJwtTokenAsync(userJwtToken);
         }
     }

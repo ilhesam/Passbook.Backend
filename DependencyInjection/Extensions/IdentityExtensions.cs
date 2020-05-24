@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace DependencyInjection.Middleware
+namespace DependencyInjection.Extensions
 {
     public static class IdentityExtensions
     {

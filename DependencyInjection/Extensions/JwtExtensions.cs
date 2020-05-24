@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,14 +9,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DependencyInjection.Middleware
+namespace DependencyInjection.Extensions
 {
     public static class JwtExtensions
     {
         public static IServiceCollection RegisterJwtService(this IServiceCollection services, IConfiguration config)
         {
-            var issuer = config?["Jwt:Issuer"];
-            var key = config?["Jwt:Key"];
+            var issuer = config["Jwt:Issuer"];
+            var key = config["Jwt:Key"];
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -34,22 +35,17 @@ namespace DependencyInjection.Middleware
                     {
                         OnTokenValidated = async context =>
                         {
-                            string authHeader = context.HttpContext.Request.Headers["Authorization"];
+                            var token = context.HttpContext.GetAuthToken();
 
-                            if (authHeader != null)
+                            if (!string.IsNullOrEmpty(token))
                             {
-                                if (authHeader.StartsWith("Bearer "))
+                                var jwtService =
+                                    context.HttpContext.RequestServices.GetRequiredService<IJwtService>();
+
+                                if (await jwtService.IsExistTokenAsync(token))
                                 {
-                                    var token = authHeader.Substring("Bearer ".Length);
-
-                                    var jwtService =
-                                        context.HttpContext.RequestServices.GetRequiredService<IJwtService>();
-
-                                    if (await jwtService.IsExistTokenAsync(token))
-                                    {
-                                        context.Success();
-                                        return;
-                                    }
+                                    context.Success();
+                                    return;
                                 }
                             }
 

@@ -26,9 +26,10 @@ namespace Infrastructure.Repositories
         public virtual IQueryable<TEntity> GetAll() => DbSet.AsNoTracking();
 
         public async Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> expression)
-            => await DbSet.SingleOrDefaultAsync(expression);
+            => await GetAll().SingleOrDefaultAsync(expression);
 
-        public virtual async Task<TEntity> GetByIdAsync(string id) => await DbSet.FindAsync(id);
+        public virtual async Task<TEntity> GetByIdAsync(string id) 
+            => await SingleOrDefaultAsync(e => e.Id == id);
 
         public virtual async Task<TEntity> AddAsync(TEntity entity)
         {

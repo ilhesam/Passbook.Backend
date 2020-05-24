@@ -46,6 +46,12 @@ namespace ApplicationCore.Services
         public virtual async Task<SignInResult> SignInAsync(string userName, string password, bool lookoutOnFailure = true)
         {
             var user = await GetUserByUserNameAsync(userName);
+
+            if (user == null)
+            {
+                return null;
+            }
+
             var signInResult = await SignInManager.CheckPasswordSignInAsync(user, password, lookoutOnFailure);
 
             return signInResult;

@@ -19,7 +19,7 @@ namespace ApplicationCore.Interfaces
 
         Task<bool> IsExistTokenAsync(string token);
 
-        Task<UserJwtToken> GetUserJwtToken(string token);
+        Task<UserJwtToken> GetUserJwtTokenAsync(string token);
 
         Task DeleteUserJwtTokenAsync(UserJwtToken userJwtToken);
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Services;
-using DependencyInjection.Middleware;
+using DependencyInjection.Extensions;
 using Domain.Interfaces;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
@@ -30,11 +30,16 @@ namespace DependencyInjection
 
             services.RegisterFluentValidationService(builder);
 
+            services.RegisterAutoMapperService();
+
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserJwtTokenRepository, UserJwtTokenRepository>();
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IJwtService, JwtService>();
+
+            services.AddTransient<IPasswordRepository, PasswordRepository>();
+            services.AddTransient<IPasswordService, PasswordService>();
 
             return services;
         }
