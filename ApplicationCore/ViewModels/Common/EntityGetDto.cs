@@ -8,8 +8,8 @@ namespace ApplicationCore.ViewModels
     {
         public string Id { get; set; }
 
-        public DateTime CreatedDateTime { get; set; }
+        public string CreatedPersianDateTime { get; set; }
 
-        public DateTime UpdatedDateTime { get; set; }
+        public string UpdatedPersianDateTime { get; set; }
     }
 }

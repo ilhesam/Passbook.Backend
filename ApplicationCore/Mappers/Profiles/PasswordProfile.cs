@@ -15,7 +15,11 @@ namespace ApplicationCore.Mappers
         {
             CreateMap<Password, PasswordGetDto>()
                 .ForMember(dest => dest.Password,
-                    opt => opt.MapFrom<DecryptPasswordResolver<Password, PasswordGetDto>>());
+                    opt => opt.MapFrom<DecryptPasswordResolver<Password, PasswordGetDto>>())
+                .ForMember(dest => dest.CreatedPersianDateTime,
+                    opt => opt.MapFrom<CreatedPersianDateTimeResolver<Password, PasswordGetDto>>())
+                .ForMember(dest => dest.UpdatedPersianDateTime,
+                    opt => opt.MapFrom<UpdatedPersianDateTimeResolver<Password, PasswordGetDto>>());
 
             CreateMap<Password, PasswordEditDto>()
                 .ForMember(dest => dest.Password,

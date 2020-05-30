@@ -71,7 +71,7 @@ namespace ApplicationCore.Services
 
         public virtual async Task<TEntityGetDto> UpdateAsync(string id, TEntity entity)
         {
-            var actualEntity = await GetByIdAsync(id);
+            var actualEntity = await _repository.GetByIdAsync(id);
 
             entity.Id = id;
             entity.CreatedDateTime = actualEntity.CreatedDateTime;
