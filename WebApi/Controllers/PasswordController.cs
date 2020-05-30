@@ -45,6 +45,24 @@ namespace WebApi.Controllers
             return Ok(passwords);
         }
 
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetPassword(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest(new { errorMessage = "آیدی نمیتواند خالی باشد" });
+            }
+
+            if (!await _passwordService.ExistsByIdAsync(id))
+            {
+                return BadRequest(new { errorMessage = "رمز عبور مدنظر شما یافت نشد" });
+            }
+
+            var password = await _passwordService.GetByIdAsync(id);
+
+            return Ok(password);
+        }
+
         [HttpPost("[action]")]
         public async Task<IActionResult> AddPassword(PasswordAddDto passwordAddDto)
         {
