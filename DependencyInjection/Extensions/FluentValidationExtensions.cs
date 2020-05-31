@@ -22,6 +22,9 @@ namespace DependencyInjection.Extensions
             services.AddTransient<IValidator<PasswordAddDto>, PasswordAddDtoValidator>();
             services.AddTransient<IValidator<PasswordEditDto>, PasswordEditDtoValidator>();
 
+            services.AddTransient<IValidator<MessageAddDto>, MessageAddDtoValidator>();
+            services.AddTransient<IValidator<MessageEditDto>, MessageEditDtoValidator>();
+
             return services;
         }
     }

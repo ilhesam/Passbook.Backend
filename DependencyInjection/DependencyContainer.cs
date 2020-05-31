@@ -41,6 +41,9 @@ namespace DependencyInjection
             services.AddTransient<IPasswordRepository, PasswordRepository>();
             services.AddTransient<IPasswordService, PasswordService>();
 
+            services.AddTransient<IMessageRepository, MessageRepository>();
+            services.AddTransient<IMessageService, MessageService>();
+
             return services;
         }
 

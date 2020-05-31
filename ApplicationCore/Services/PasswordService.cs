@@ -29,7 +29,7 @@ namespace ApplicationCore.Services
 
         public virtual async Task<List<PasswordGetDto>> GetUserPasswordsAsync(string userId)
             => await PasswordRepository.GetAllByUserId(userId)
-                .Select(p => Mapper.Map<Password, PasswordGetDto>(p))
+                .Select(p => MapEntityToGetDto(p))
                 .ToListAsync();
 
         public async Task<bool> ExistsAsync(string userId, string passwordId)
@@ -38,10 +38,10 @@ namespace ApplicationCore.Services
 
         public async Task<PasswordGetDto> AddAsync(string userId, PasswordAddDto passwordAddDto)
         {
-            var password = MapAddDtoToEntity(passwordAddDto);
-            password.UserId = userId;
+            var entity = MapAddDtoToEntity(passwordAddDto);
+            entity.UserId = userId;
 
-            return await AddAsync(password);
+            return await AddAsync(entity);
         }
 
         public async Task<PasswordGetDto> UpdateAsync(string userId, string passwordId, PasswordEditDto passwordEditDto)

@@ -153,11 +153,33 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(nullable: false),
+                    UpdatedDateTime = table.Column<DateTime>(nullable: false),
+                    Title = table.Column<string>(maxLength: 256, nullable: false),
+                    Body = table.Column<string>(maxLength: 1024, nullable: false),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Passwords",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    CreatedDateTime = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
+                    CreatedDateTime = table.Column<DateTime>(nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     EmailAddress = table.Column<string>(maxLength: 256, nullable: true),
@@ -181,7 +203,7 @@ namespace Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    CreatedDateTime = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
+                    CreatedDateTime = table.Column<DateTime>(nullable: false),
                     UpdatedDateTime = table.Column<DateTime>(nullable: false),
                     AccessTokenHash = table.Column<string>(maxLength: 256, nullable: false),
                     AccessTokenExpiresDateTime = table.Column<DateTime>(nullable: false),
@@ -239,6 +261,11 @@ namespace Infrastructure.Persistence.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Messages_UserId",
+                table: "Messages",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Passwords_UserId",
                 table: "Passwords",
                 column: "UserId");
@@ -265,6 +292,9 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Passwords");

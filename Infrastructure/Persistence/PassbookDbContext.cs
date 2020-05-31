@@ -17,6 +17,8 @@ namespace Infrastructure.Persistence
 
         public virtual DbSet<Password> Passwords { get; set; }
 
+        public virtual DbSet<Message> Messages { get; set; }
+
         public PassbookDbContext(DbContextOptions<PassbookDbContext> options)
             : base(options)
         {
@@ -30,6 +32,8 @@ namespace Infrastructure.Persistence
             modelBuilder?.ApplyConfiguration<AppUser>(new AppUserConfiguration());
 
             modelBuilder?.ApplyConfiguration<Password>(new PasswordConfiguration());
+
+            modelBuilder?.ApplyConfiguration<Message>(new MessageConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ApplicationCore.Mappers;
+using ApplicationCore.Mappers.Profiles;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ namespace DependencyInjection.Extensions
             var mapperConfig = new MapperConfiguration(config =>
             {
                 config.AddProfile(new PasswordProfile());
+                config.AddProfile(new MessageProfile());
             });
 
             var mapper = mapperConfig.CreateMapper();

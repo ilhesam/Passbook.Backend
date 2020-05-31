@@ -10,5 +10,7 @@ namespace Domain.Entities
         public virtual ICollection<UserJwtToken> JwtTokens { get; set; }
 
         public virtual ICollection<Password> Passwords { get; set; }
+
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

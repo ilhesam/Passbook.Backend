@@ -76,9 +76,9 @@ namespace WebApi.Controllers
             var token = HttpContext.GetAuthToken();
             var userJwtToken = await _jwtService.GetUserJwtTokenAsync(token);
 
-            await _passwordService.AddAsync(userJwtToken.UserId, passwordAddDto);
+            var passwordGetDto = await _passwordService.AddAsync(userJwtToken.UserId, passwordAddDto);
 
-            return Ok(new { message = "رمز عبور با موفقیت اضافه شد" });
+            return Ok(new { password = passwordGetDto, message = "رمز عبور با موفقیت اضافه شد" });
         }
 
         [HttpPut("[action]")]
@@ -100,9 +100,9 @@ namespace WebApi.Controllers
                 return NotFound(new { errorMessage = "رمز عبور مدنظر شما یافت نشد" });
             }
 
-            await _passwordService.UpdateAsync(userId, id, passwordEditDto);
+            var passwordGetDto = await _passwordService.UpdateAsync(userId, id, passwordEditDto);
 
-            return Ok(new { message = "رمز عبور با موفقیت ویرایش شد" });
+            return Ok(new { password = passwordGetDto, message = "رمز عبور با موفقیت ویرایش شد" });
         }
 
         [HttpDelete("[action]")]

@@ -18,6 +18,10 @@ namespace Infrastructure.Persistence.Configurations.Identity
             builder?.HasMany(u => u.Passwords)
                 .WithOne(u => u.User)
                 .HasForeignKey(u => u.UserId);
+
+            builder?.HasMany(u => u.Messages)
+                .WithOne(u => u.User)
+                .HasForeignKey(u => u.UserId);
         }
     }
 }
